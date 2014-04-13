@@ -12,6 +12,7 @@ import (
 
 var Username string
 var ApiKey string
+var Debug bool
 
 const (
 	DEFAULT_CONFIG = ".raxrc"
@@ -42,6 +43,8 @@ func parseConfig(c *cli.Context) error {
 		log.Fatal("api_key missing from credentials section")
 	}
 
+	Debug = c.Bool("debug")
+
 	return nil
 }
 
@@ -50,6 +53,7 @@ func main() {
 	app.Name = "raxmon2"
 	app.Flags = []cli.Flag{
 		cli.StringFlag{"config", DEFAULT_CONFIG, ""},
+		cli.BoolFlag{"debug", ""},
 	}
 	app.Usage = "raxmon2 [command] [options]"
 	app.Commands = append(EntitiesExports)

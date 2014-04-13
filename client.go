@@ -11,5 +11,6 @@ const (
 
 func GetClient() *monitoring.MonitoringClient {
 	cli := monitoring.MakeAPIKeyMonitoringClient(MAAS_URL, identity.USIdentityService, Username, ApiKey)
+	cli.SetDebug(Debug)
 	return cli
 }
