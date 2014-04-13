@@ -18,20 +18,30 @@ const (
 	DEFAULT_CONFIG = ".raxrc"
 )
 
-func parseConfig(c *cli.Context) error {
-	var ok bool
-
+func getConfigFilePath(c *cli.Context) string {
+	var config string
+	if c != nil {
+		config = c.String("config")
+	} else {
+		config = DEFAULT_CONFIG
+	}
 	usr, err := user.Current()
 	if err != nil {
 		log.Fatal(err)
 	}
-	configFilePath := path.Join(usr.HomeDir, c.String("config"))
+	return path.Join(usr.HomeDir, config)
+}
+
+func parseConfig(c *cli.Context) error {
+	configFilePath := getConfigFilePath(c)
 
 	// Load INI File
 	config, err := ini.LoadFile(configFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	var ok bool
 
 	Username, ok = config.Get("credentials", "username")
 	if !ok {
@@ -52,7 +62,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "raxmon2"
 	app.Flags = []cli.Flag{
-		cli.StringFlag{"config", DEFAULT_CONFIG, ""},
+		cli.StringFlag{"config", getConfigFilePath(nil), ""},
 		cli.BoolFlag{"debug", ""},
 	}
 	app.Usage = "raxmon2 [command] [options]"
