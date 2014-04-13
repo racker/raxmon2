@@ -6,15 +6,9 @@ import (
 	"log"
 
 	"github.com/codegangsta/cli"
-	"github.com/racker/gorax/monitoring"
 )
 
-func displayList(obj []monitoring.Entity) {
-	str, _ := json.MarshalIndent(obj, "", "  ")
-	fmt.Println(string(str))
-}
-
-func displayOne(obj *monitoring.Entity) {
+func display(obj interface{}) {
 	str, _ := json.MarshalIndent(obj, "", "  ")
 	fmt.Println(string(str))
 }
@@ -26,7 +20,7 @@ func List(c *cli.Context) {
 		log.Fatal(err)
 	}
 
-	displayList(entities)
+	display(entities)
 }
 
 func Get(c *cli.Context) {
@@ -39,7 +33,7 @@ func Get(c *cli.Context) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	displayOne(entity)
+	display(entity)
 }
 
 func Delete(c *cli.Context) {
@@ -66,6 +60,13 @@ func HostInfo(c *cli.Context) {
 		fmt.Println("Type Missing")
 		return
 	}
+
+	hostinfo, err := GetClient().HostInfoEntity(enId, hostInfoType)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	display(hostinfo)
 }
 
 var EntitiesExports []cli.Command = []cli.Command{
