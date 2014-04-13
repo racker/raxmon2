@@ -13,7 +13,7 @@ func display(obj interface{}) {
 	fmt.Println(string(str))
 }
 
-func List(c *cli.Context) {
+func list(c *cli.Context) {
 
 	entities, err := GetClient().ListEntities()
 	if err != nil {
@@ -23,7 +23,7 @@ func List(c *cli.Context) {
 	display(entities)
 }
 
-func Get(c *cli.Context) {
+func get(c *cli.Context) {
 	enId := c.String("entity-id")
 	if len(enId) == 0 {
 		fmt.Println("Entity ID Missing")
@@ -36,7 +36,7 @@ func Get(c *cli.Context) {
 	display(entity)
 }
 
-func Delete(c *cli.Context) {
+func del(c *cli.Context) {
 	enId := c.String("entity-id")
 	if len(enId) == 0 {
 		fmt.Println("Entity ID Missing")
@@ -49,7 +49,7 @@ func Delete(c *cli.Context) {
 	fmt.Println("Entity Deleted", enId)
 }
 
-func HostInfo(c *cli.Context) {
+func hostInfo(c *cli.Context) {
 	enId := c.String("entity-id")
 	if len(enId) == 0 {
 		fmt.Println("Entity ID Missing")
@@ -69,16 +69,36 @@ func HostInfo(c *cli.Context) {
 	display(hostinfo)
 }
 
+func agentTargets(c *cli.Context) {
+	enId := c.String("entity-id")
+	if len(enId) == 0 {
+		fmt.Println("Entity ID Missing")
+		return
+	}
+	agentType := c.String("type")
+	if len(agentType) == 0 {
+		fmt.Println("Type Missing")
+		return
+	}
+
+	info, err := GetClient().AgentTargets(enId, agentType)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	display(info)
+}
+
 var EntitiesExports []cli.Command = []cli.Command{
 	{
 		Name:   "entities.list",
 		Usage:  "Entity List",
-		Action: List,
+		Action: list,
 	},
 	{
 		Name:   "entities.get",
 		Usage:  "Entity Get",
-		Action: Get,
+		Action: get,
 		Flags: []cli.Flag{
 			cli.StringFlag{"entity-id", "", "The Entity ID"},
 		},
@@ -86,7 +106,7 @@ var EntitiesExports []cli.Command = []cli.Command{
 	{
 		Name:   "entities.delete",
 		Usage:  "Entity Delete",
-		Action: Delete,
+		Action: del,
 		Flags: []cli.Flag{
 			cli.StringFlag{"entity-id", "", "The Entity ID"},
 		},
@@ -94,7 +114,16 @@ var EntitiesExports []cli.Command = []cli.Command{
 	{
 		Name:   "entities.host_info",
 		Usage:  "Entity Host Info",
-		Action: HostInfo,
+		Action: hostInfo,
+		Flags: []cli.Flag{
+			cli.StringFlag{"entity-id", "", "The Entity ID"},
+			cli.StringFlag{"type", "", "Host Info Type"},
+		},
+	},
+	{
+		Name:   "entities.agent_targets",
+		Usage:  "Entity Agent Targets",
+		Action: agentTargets,
 		Flags: []cli.Flag{
 			cli.StringFlag{"entity-id", "", "The Entity ID"},
 			cli.StringFlag{"type", "", "Host Info Type"},
