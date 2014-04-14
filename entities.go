@@ -1,29 +1,23 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 
 	"github.com/codegangsta/cli"
 )
 
-func display(obj interface{}) {
-	str, _ := json.MarshalIndent(obj, "", "  ")
-	fmt.Println(string(str))
-}
-
-func list(c *cli.Context) {
+func entityList(c *cli.Context) {
 
 	entities, err := GetClient().ListEntities()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	display(entities)
+	Display(entities)
 }
 
-func get(c *cli.Context) {
+func entityGet(c *cli.Context) {
 	enId := c.String("entity-id")
 	if len(enId) == 0 {
 		fmt.Println("Entity ID Missing")
@@ -33,10 +27,10 @@ func get(c *cli.Context) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	display(entity)
+	Display(entity)
 }
 
-func del(c *cli.Context) {
+func entityDelete(c *cli.Context) {
 	enId := c.String("entity-id")
 	if len(enId) == 0 {
 		fmt.Println("Entity ID Missing")
@@ -49,7 +43,7 @@ func del(c *cli.Context) {
 	fmt.Println("Entity Deleted", enId)
 }
 
-func hostInfo(c *cli.Context) {
+func entityHostInfo(c *cli.Context) {
 	enId := c.String("entity-id")
 	if len(enId) == 0 {
 		fmt.Println("Entity ID Missing")
@@ -66,10 +60,10 @@ func hostInfo(c *cli.Context) {
 		log.Fatal(err)
 	}
 
-	display(hostinfo)
+	Display(hostinfo)
 }
 
-func agentTargets(c *cli.Context) {
+func entityAgentTargets(c *cli.Context) {
 	enId := c.String("entity-id")
 	if len(enId) == 0 {
 		fmt.Println("Entity ID Missing")
@@ -86,19 +80,19 @@ func agentTargets(c *cli.Context) {
 		log.Fatal(err)
 	}
 
-	display(info)
+	Display(info)
 }
 
 var EntitiesExports []cli.Command = []cli.Command{
 	{
 		Name:   "entities.list",
 		Usage:  "Entity List",
-		Action: list,
+		Action: entityList,
 	},
 	{
 		Name:   "entities.get",
 		Usage:  "Entity Get",
-		Action: get,
+		Action: entityGet,
 		Flags: []cli.Flag{
 			cli.StringFlag{"entity-id", "", "The Entity ID"},
 		},
@@ -106,7 +100,7 @@ var EntitiesExports []cli.Command = []cli.Command{
 	{
 		Name:   "entities.delete",
 		Usage:  "Entity Delete",
-		Action: del,
+		Action: entityDelete,
 		Flags: []cli.Flag{
 			cli.StringFlag{"entity-id", "", "The Entity ID"},
 		},
@@ -114,7 +108,7 @@ var EntitiesExports []cli.Command = []cli.Command{
 	{
 		Name:   "entities.host_info",
 		Usage:  "Entity Host Info",
-		Action: hostInfo,
+		Action: entityHostInfo,
 		Flags: []cli.Flag{
 			cli.StringFlag{"entity-id", "", "The Entity ID"},
 			cli.StringFlag{"type", "", "Host Info Type"},
@@ -123,7 +117,7 @@ var EntitiesExports []cli.Command = []cli.Command{
 	{
 		Name:   "entities.agent_targets",
 		Usage:  "Entity Agent Targets",
-		Action: agentTargets,
+		Action: entityAgentTargets,
 		Flags: []cli.Flag{
 			cli.StringFlag{"entity-id", "", "The Entity ID"},
 			cli.StringFlag{"type", "", "Host Info Type"},

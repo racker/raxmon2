@@ -21,8 +21,6 @@ const (
 func getConfigFilePath(c *cli.Context) string {
 	var config string
 	if c != nil {
-		config = c.String("config")
-	} else {
 		config = DEFAULT_CONFIG
 	}
 	usr, err := user.Current()
@@ -62,11 +60,11 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "raxmon2"
 	app.Flags = []cli.Flag{
-		cli.StringFlag{"config", getConfigFilePath(nil), ""},
-		cli.BoolFlag{"debug", ""},
+		cli.StringFlag{"config", getConfigFilePath(nil), "RaxRC Config"},
+		cli.BoolFlag{"debug", "Enable Debug"},
 	}
 	app.Usage = "raxmon2 [command] [options]"
-	app.Commands = append(EntitiesExports)
+	app.Commands = append(EntitiesExports, AgentsExports...)
 	app.Version = "0.0.1"
 	app.Before = parseConfig
 	app.Run(os.Args)
