@@ -36,7 +36,7 @@ func parseConfig(c *cli.Context) error {
 	// Load INI File
 	config, err := ini.LoadFile(configFilePath)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	var ok bool
