@@ -34,6 +34,19 @@ func agentHostInfo(c *cli.Context) {
 	Display(info)
 }
 
+func agentConnectionsList(c *cli.Context) {
+	agId := c.String("agent-id")
+	if len(agId) == 0 {
+		fmt.Println("Agent ID Missing")
+		return
+	}
+	conns, err := GetClient().AgentConnectionsList(agId)
+	if err != nil {
+		log.Fatal(err)
+	}
+	Display(conns)
+}
+
 var AgentsExports []cli.Command = []cli.Command{
 	{
 		Name:   "agent_tokens.list",
@@ -47,6 +60,14 @@ var AgentsExports []cli.Command = []cli.Command{
 		Flags: []cli.Flag{
 			cli.StringFlag{"agent-id", "", "The Agent ID"},
 			cli.StringFlag{"type", "", "Host Info Type"},
+		},
+	},
+	{
+		Name:   "agent_connections.list",
+		Usage:  "Agent Connections List",
+		Action: agentConnectionsList,
+		Flags: []cli.Flag{
+			cli.StringFlag{"agent-id", "", "The Agent ID"},
 		},
 	},
 }
