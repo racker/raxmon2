@@ -61,11 +61,13 @@ func agentConnectionsList(c *cli.Context) {
 }
 
 var AgentsExports []cli.Command = []cli.Command{
-	{Name: "agent_tokens.list",
+	{
+		Name:   "agent_tokens.list",
 		Usage:  "Agent Token List",
 		Action: agentTokenList,
 	},
-	{Name: "agent_tokens.delete",
+	{
+		Name:   "agent_tokens.delete",
 		Usage:  "Agent Token Delete",
 		Action: agentTokenDelete,
 		Flags: []cli.Flag{
