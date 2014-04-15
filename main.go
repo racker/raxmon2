@@ -19,15 +19,14 @@ const (
 )
 
 func getConfigFilePath(c *cli.Context) string {
-	var config string
 	if c != nil {
-		config = DEFAULT_CONFIG
+		return c.String("config")
 	}
 	usr, err := user.Current()
 	if err != nil {
 		log.Fatal(err)
 	}
-	return path.Join(usr.HomeDir, config)
+	return path.Join(usr.HomeDir, DEFAULT_CONFIG)
 }
 
 func parseConfig(c *cli.Context) error {
