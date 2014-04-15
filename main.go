@@ -60,6 +60,7 @@ func main() {
 	commands = append(commands, AgentsExports...)
 	commands = append(commands, ChecksExports...)
 	commands = append(commands, EntitiesExports...)
+	commands = append(commands, MonitoringZonesExports...)
 
 	app := cli.NewApp()
 	app.Name = "raxmon2"
