@@ -40,7 +40,7 @@ func agentTokenDelete(c *cli.Context) {
 		fmt.Println("ID Missing")
 		return
 	}
-	err := GetClient().AgentTokenDelete(id)
+	err := GetClient().DeleteAgentToken(id)
 	if err != nil {
 		log.Fatal(err)
 	}
