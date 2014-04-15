@@ -34,6 +34,19 @@ func agentHostInfo(c *cli.Context) {
 	Display(info)
 }
 
+func agentTokenDelete(c *cli.Context) {
+	id := c.String("id")
+	if len(id) == 0 {
+		fmt.Println("ID Missing")
+		return
+	}
+	err := GetClient().AgentTokenDelete(id)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Token Deleted")
+}
+
 func agentConnectionsList(c *cli.Context) {
 	agId := c.String("agent-id")
 	if len(agId) == 0 {
@@ -48,10 +61,16 @@ func agentConnectionsList(c *cli.Context) {
 }
 
 var AgentsExports []cli.Command = []cli.Command{
-	{
-		Name:   "agent_tokens.list",
+	{Name: "agent_tokens.list",
 		Usage:  "Agent Token List",
 		Action: agentTokenList,
+	},
+	{Name: "agent_tokens.delete",
+		Usage:  "Agent Token Delete",
+		Action: agentTokenDelete,
+		Flags: []cli.Flag{
+			cli.StringFlag{"id", "", "ID"},
+		},
 	},
 	{
 		Name:   "agent_host.info",
