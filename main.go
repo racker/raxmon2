@@ -57,9 +57,9 @@ func parseConfig(c *cli.Context) error {
 
 func main() {
 	commands := make([]cli.Command, 1)
-	commands = append(commands, EntitiesExports...)
 	commands = append(commands, AgentsExports...)
 	commands = append(commands, ChecksExports...)
+	commands = append(commands, EntitiesExports...)
 
 	app := cli.NewApp()
 	app.Name = "raxmon2"
