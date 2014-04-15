@@ -20,6 +20,14 @@ func checkList(c *cli.Context) {
 	Display(checks)
 }
 
+func checkTypeList(c *cli.Context) {
+	types, err := GetClient().CheckTypeList()
+	if err != nil {
+		log.Fatal(err)
+	}
+	Display(types)
+}
+
 var ChecksExports []cli.Command = []cli.Command{
 	{
 		Name:   "checks.list",
@@ -28,5 +36,10 @@ var ChecksExports []cli.Command = []cli.Command{
 		Flags: []cli.Flag{
 			cli.StringFlag{"entity-id", "", "The Entity ID"},
 		},
+	},
+	{
+		Name:   "check_type.list",
+		Usage:  "Check Type List",
+		Action: checkTypeList,
 	},
 }
