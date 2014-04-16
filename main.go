@@ -60,6 +60,7 @@ func main() {
 	commands = append(commands, AgentsExports...)
 	commands = append(commands, ChecksExports...)
 	commands = append(commands, EntitiesExports...)
+	commands = append(commands, LimitsExports...)
 	commands = append(commands, MetricsExports...)
 	commands = append(commands, MonitoringZonesExports...)
 
