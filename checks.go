@@ -20,7 +20,7 @@ func checkList(c *cli.Context) {
 	Display(checks)
 }
 
-func checkTypeList(c *cli.Context) {
+func checkTypesList(c *cli.Context) {
 	types, err := GetClient().CheckTypeList()
 	if err != nil {
 		log.Fatal(err)
@@ -38,8 +38,8 @@ var ChecksExports []cli.Command = []cli.Command{
 		},
 	},
 	{
-		Name:   "check_type.list",
-		Usage:  "Check Type List",
-		Action: checkTypeList,
+		Name:   "check_types.list",
+		Usage:  "Check Types List",
+		Action: checkTypesList,
 	},
 }
