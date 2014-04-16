@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/racker/gorax/identity"
-	"github.com/racker/gorax/monitoring"
+	"github.com/rphillips/gorax/identity"
+	"github.com/rphillips/gorax/monitoring"
 )
 
 const (
