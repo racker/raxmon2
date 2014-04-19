@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/codegangsta/cli"
 )
@@ -83,6 +84,47 @@ func entityAgentTargets(c *cli.Context) {
 	Display(info)
 }
 
+func StringToDict(line string) map[string]string {
+	dict := make(map[string]string)
+
+	split := strings.Split(line, ",")
+	for _, value := range split {
+		split2 := strings.Split(value, "=")
+		if len(split2) == 2 {
+			dict[split2[0]] = split2[1]
+		}
+	}
+
+	return dict
+}
+
+func entityCreate(c *cli.Context) {
+	var metadata map[string]string
+	var ipaddresses map[string]string
+	var agentId string
+	var label string
+
+	label = c.String("label")
+	agentId = c.String("agent-id")
+
+	if len(label) == 0 {
+		log.Fatal("Label is required")
+	}
+
+	if metadataStr := c.String("metadata"); metadataStr != "" {
+		metadata = StringToDict(metadataStr)
+	}
+	if ipAddressesStr := c.String("ip-addresses"); ipAddressesStr != "" {
+		ipaddresses = StringToDict(ipAddressesStr)
+	}
+
+	url, err := GetClient().CreateEntity(label, agentId, metadata, ipaddresses)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(url)
+}
+
 var EntitiesExports []cli.Command = []cli.Command{
 	{
 		Name:   "entities.list",
@@ -95,6 +137,17 @@ var EntitiesExports []cli.Command = []cli.Command{
 		Action: entityGet,
 		Flags: []cli.Flag{
 			cli.StringFlag{"entity-id", "", "The Entity ID"},
+		},
+	},
+	{
+		Name:   "entities.create",
+		Usage:  "Entity Create",
+		Action: entityCreate,
+		Flags: []cli.Flag{
+			cli.StringFlag{"label", "", "Label"},
+			cli.StringFlag{"ip-addresses", "", "IP Addresses"},
+			cli.StringFlag{"metadata", "", "Metadata"},
+			cli.StringFlag{"agent-id", "", "Agent ID"},
 		},
 	},
 	{
