@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/codegangsta/cli"
 )
@@ -82,20 +81,6 @@ func entityAgentTargets(c *cli.Context) {
 	}
 
 	Display(info)
-}
-
-func StringToDict(line string) map[string]string {
-	dict := make(map[string]string)
-
-	split := strings.Split(line, ",")
-	for _, value := range split {
-		split2 := strings.Split(value, "=")
-		if len(split2) == 2 {
-			dict[split2[0]] = split2[1]
-		}
-	}
-
-	return dict
 }
 
 func entityCreate(c *cli.Context) {
