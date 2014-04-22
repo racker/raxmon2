@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/codegangsta/cli"
 	"github.com/rphillips/gorax/monitoring"
@@ -16,7 +15,7 @@ func checkList(c *cli.Context) {
 	}
 	checks, err := GetClient().ListChecks(enId)
 	if err != nil {
-		log.Fatal(err)
+		Die(err)
 	}
 	Display(checks)
 }
@@ -26,7 +25,7 @@ func checkCreate(c *cli.Context) {
 
 	enId := c.String("entity-id")
 	if len(enId) == 0 {
-		log.Fatal("Entity ID required")
+		Die("Entity ID required")
 	}
 
 	label := c.String("label")
@@ -36,19 +35,19 @@ func checkCreate(c *cli.Context) {
 
 	checkType := c.String("type")
 	if len(checkType) == 0 {
-		log.Fatal("Check type required")
+		Die("Check type required")
 	} else {
 		check.Type = &checkType
 	}
 
 	timeout := c.Int("timeout")
 	if timeout == -1 {
-		log.Fatal("Timeout required")
+		Die("Timeout required")
 	}
 
 	period := c.Int("period")
 	if period == -1 {
-		log.Fatal("Period required")
+		Die("Period required")
 	}
 
 	details_str := c.String("details")
@@ -82,9 +81,51 @@ func checkCreate(c *cli.Context) {
 
 	url, err := GetClient().CreateCheck(enId, &check)
 	if err != nil {
-		log.Fatal(err)
+		Die(err)
 	}
 	fmt.Println(url)
+}
+
+func checkDelete(c *cli.Context) {
+	enId := c.String("entity-id")
+	chId := c.String("id")
+
+	if len(enId) == 0 {
+		Die("Entity ID Missing")
+	}
+	if len(chId) == 0 {
+		Die("Check ID Missing")
+	}
+
+	err := GetClient().DeleteCheck(enId, chId)
+	if err != nil {
+		Die(err)
+	}
+	fmt.Printf("%s removed", chId)
+}
+
+func checkDisable(c *cli.Context) {
+	enId := c.String("entity-id")
+	chId := c.String("id")
+
+	if len(enId) == 0 {
+		Die("Entity ID Missing")
+	}
+	if len(chId) == 0 {
+		Die("Check ID Missing")
+	}
+
+	check := struct {
+		Disabled bool `json:"disabled"`
+	}{
+		true,
+	}
+
+	err := GetClient().UpdateCheck(enId, chId, &check)
+	if err != nil {
+		Die(err)
+	}
+	fmt.Printf("%s disabled", chId)
 }
 
 var ChecksExports []cli.Command = []cli.Command{
@@ -111,6 +152,24 @@ var ChecksExports []cli.Command = []cli.Command{
 		Action: checkList,
 		Flags: []cli.Flag{
 			cli.StringFlag{"entity-id", "", "The Entity ID"},
+		},
+	},
+	{
+		Name:   "checks.delete",
+		Usage:  "Check Delete",
+		Action: checkDelete,
+		Flags: []cli.Flag{
+			cli.StringFlag{"entity-id", "", "The Entity ID"},
+			cli.StringFlag{"id", "", "The Check ID"},
+		},
+	},
+	{
+		Name:   "checks.disable",
+		Usage:  "Check Disable",
+		Action: checkDisable,
+		Flags: []cli.Flag{
+			cli.StringFlag{"entity-id", "", "The Entity ID"},
+			cli.StringFlag{"id", "", "The Check ID"},
 		},
 	},
 }
