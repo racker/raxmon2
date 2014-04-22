@@ -101,10 +101,12 @@ func checkDelete(c *cli.Context) {
 	if err != nil {
 		Die(err)
 	}
-	fmt.Printf("%s removed", chId)
+	fmt.Printf("%s removed\n", chId)
 }
 
-func checkDisable(c *cli.Context) {
+func checkEnableDisable(c *cli.Context, enable bool) {
+	var operation string
+
 	enId := c.String("entity-id")
 	chId := c.String("id")
 
@@ -115,17 +117,31 @@ func checkDisable(c *cli.Context) {
 		Die("Check ID Missing")
 	}
 
+	if enable {
+		operation = "disabled"
+	} else {
+		operation = "enabled"
+	}
+
 	check := struct {
 		Disabled bool `json:"disabled"`
 	}{
-		true,
+		enable,
 	}
 
 	err := GetClient().UpdateCheck(enId, chId, &check)
 	if err != nil {
 		Die(err)
 	}
-	fmt.Printf("%s disabled", chId)
+	fmt.Printf("%s %s\n", chId, operation)
+}
+
+func checkEnable(c *cli.Context) {
+	checkEnableDisable(c, false)
+}
+
+func checkDisable(c *cli.Context) {
+	checkEnableDisable(c, true)
 }
 
 var ChecksExports []cli.Command = []cli.Command{
@@ -167,6 +183,15 @@ var ChecksExports []cli.Command = []cli.Command{
 		Name:   "checks.disable",
 		Usage:  "Check Disable",
 		Action: checkDisable,
+		Flags: []cli.Flag{
+			cli.StringFlag{"entity-id", "", "The Entity ID"},
+			cli.StringFlag{"id", "", "The Check ID"},
+		},
+	},
+	{
+		Name:   "checks.enable",
+		Usage:  "Check Enable",
+		Action: checkEnable,
 		Flags: []cli.Flag{
 			cli.StringFlag{"entity-id", "", "The Entity ID"},
 			cli.StringFlag{"id", "", "The Check ID"},
