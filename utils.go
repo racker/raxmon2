@@ -1,6 +1,10 @@
 package main
 
-import "strings"
+import (
+	"fmt"
+	"os"
+	"strings"
+)
 
 func StringToDict(line string) map[string]string {
 	dict := make(map[string]string)
@@ -18,4 +22,9 @@ func StringToDict(line string) map[string]string {
 
 func StringToList(line string) []string {
 	return strings.Split(line, ",")
+}
+
+func Die(obj interface{}) {
+	fmt.Println(obj)
+	os.Exit(1)
 }
