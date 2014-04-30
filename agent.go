@@ -72,6 +72,14 @@ func agentConnectionsList(c *cli.Context) {
 	Display(conns)
 }
 
+func agentList(c *cli.Context) {
+	conns, err := GetClient().AgentList()
+	if err != nil {
+		log.Fatal(err)
+	}
+	Display(conns)
+}
+
 var AgentsExports []cli.Command = []cli.Command{
 	{
 		Name:   "agent_tokens.list",
@@ -102,6 +110,11 @@ var AgentsExports []cli.Command = []cli.Command{
 		Flags: []cli.Flag{
 			cli.StringFlag{"agent-id", "", "The Agent ID"},
 		},
+	},
+	{
+		Name:   "agents.list",
+		Usage:  "Agent List",
+		Action: agentList,
 	},
 	{
 		Name:   "agents.upgrade",
