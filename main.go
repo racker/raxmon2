@@ -50,6 +50,16 @@ func parseConfig(c *cli.Context) error {
 		log.Fatal("api_key missing from credentials section")
 	}
 
+	authUrl, ok := config.Get("auth_api", "url")
+	if ok {
+		IDENTITY_URL = authUrl
+	}
+
+	url, ok := config.Get("api", "url")
+	if ok {
+		MAAS_URL = url
+	}
+
 	Debug = c.Bool("debug")
 
 	return nil
