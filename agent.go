@@ -47,6 +47,18 @@ func agentTokenDelete(c *cli.Context) {
 	fmt.Println("Token Deleted")
 }
 
+func agentUpgrade(c *cli.Context) {
+	id := c.String("agent-id")
+	if len(id) == 0 {
+		fmt.Println("agent-id Missing")
+		return
+	}
+	err := GetClient().UpgradeAgent(id)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func agentConnectionsList(c *cli.Context) {
 	agId := c.String("agent-id")
 	if len(agId) == 0 {
@@ -87,6 +99,14 @@ var AgentsExports []cli.Command = []cli.Command{
 		Name:   "agent_connections.list",
 		Usage:  "Agent Connections List",
 		Action: agentConnectionsList,
+		Flags: []cli.Flag{
+			cli.StringFlag{"agent-id", "", "The Agent ID"},
+		},
+	},
+	{
+		Name:   "agents.upgrade",
+		Usage:  "Agent Upgrade",
+		Action: agentUpgrade,
 		Flags: []cli.Flag{
 			cli.StringFlag{"agent-id", "", "The Agent ID"},
 		},
